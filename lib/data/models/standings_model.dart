@@ -7,7 +7,7 @@ class StandingsModel extends Equatable {
     required this.position,
     required this.points,
   });
-  final int teamId;
+  final int? teamId;
   final int position;
   final int points;
 

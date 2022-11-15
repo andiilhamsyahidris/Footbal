@@ -8,8 +8,8 @@ class StandingsResponse extends Equatable {
 
   factory StandingsResponse.fromJson(Map<String, dynamic> json) =>
       StandingsResponse(
-        standingsList: List<StandingsModel>.from((json['standings'] as List)
-            .map((e) => StandingsResponse.fromJson(e))),
+        standingsList: List<StandingsModel>.from(
+            (json['standings'] as List).map((e) => StandingsModel.fromJson(e))),
       );
   Map<String, dynamic> toJson() => {
         'standings': List<dynamic>.from(

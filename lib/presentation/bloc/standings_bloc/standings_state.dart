@@ -13,7 +13,6 @@ class StandingsLoading extends StandingsState {}
 
 class StandingsError extends StandingsState {
   final String message;
-
   const StandingsError(this.message);
 
   @override
@@ -23,7 +22,7 @@ class StandingsError extends StandingsState {
 class StandingsHasData extends StandingsState {
   final List<Standings> standings;
 
-  const StandingsHasData({required this.standings});
+  const StandingsHasData(this.standings);
 
   @override
   List<Object> get props => [standings];

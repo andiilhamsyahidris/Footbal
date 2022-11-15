@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 abstract class FootballRemoteDatasources {
   Future<List<TeamsModel>> getTeams();
   Future<List<SeasonsModel>> getSeasons();
-  Future<List<StandingsModel>> getStandings(int seasonId);
+  Future<List<StandingsModel>> getStandings(int? seasonId);
 }
 
 class FootballRemoteDatasourcesImpl implements FootballRemoteDatasources {
@@ -46,9 +46,9 @@ class FootballRemoteDatasourcesImpl implements FootballRemoteDatasources {
   }
 
   @override
-  Future<List<StandingsModel>> getStandings(int seasonId) async {
-    final response =
-        await client.get(Uri.parse('$baseUrl/standings?$apikey&$seasonId'));
+  Future<List<StandingsModel>> getStandings(int? seasonId) async {
+    final response = await client
+        .get(Uri.parse('$baseUrl/standings?$apikey&season_id=$seasonId'));
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
       var data = jsonResponse['data'];

@@ -7,5 +7,5 @@ import 'package:footbal/domain/entities/teams.dart';
 abstract class TeamsRepository {
   Future<Either<Failure, List<Teams>>> getTeams();
   Future<Either<Failure, List<Seasons>>> getSeasons();
-  Future<Either<Failure, List<Standings>>> getStandings(int seasonId);
+  Future<Either<Failure, List<Standings>>> getStandings(int? seasonId);
 }

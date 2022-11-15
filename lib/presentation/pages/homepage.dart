@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:footbal/common/constant.dart';
 import 'package:footbal/common/custom_information.dart';
-import 'package:footbal/domain/entities/seasons.dart';
 import 'package:footbal/presentation/bloc/season_bloc/seasons_bloc.dart';
 import 'package:footbal/presentation/bloc/standings_bloc/standings_bloc.dart';
 import 'package:footbal/presentation/bloc/team_list_bloc/team_list_bloc.dart';
 import 'package:footbal/presentation/widget/season_list.dart';
+import 'package:footbal/presentation/widget/standing_list.dart';
 import 'package:footbal/presentation/widget/team_list.dart';
 
 class Homepage extends StatefulWidget {
@@ -17,15 +17,12 @@ class Homepage extends StatefulWidget {
 }
 
 class HomepageState extends State<Homepage> {
-  late int seasonId;
-
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
       context.read<TeamListBloc>().add(FetchTeamList());
       context.read<SeasonsBloc>().add(FetchSeasons());
-      context.read<StandingsBloc>().add(FetchStandings(seasonId));
     });
   }
 
@@ -175,46 +172,77 @@ class HomepageState extends State<Homepage> {
             const SizedBox(
               height: 10,
             ),
-            _buildSubHeadingSeasons(),
+            BlocBuilder<SeasonsBloc, SeasonsState>(
+              builder: (context, state) {
+                if (state is SeasonsLoading) {
+                  return Container();
+                } else if (state is SeasonsHasData) {
+                  return SeasonList(state.seasons);
+                } else if (state is SeasonsError) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(state.message),
+                    ),
+                  );
+                } else {
+                  return Center(
+                    child: Container(),
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
-  Row _buildSubHeadingSeasons() {
-    return Row(
-      children: [
-        Text(
-          'Standings',
-          style: Theme.of(context)
-              .textTheme
-              .titleSmall!
-              .copyWith(color: Colors.white),
-        ),
-        const SizedBox(
-          width: 9,
-        ),
-        BlocBuilder<SeasonsBloc, SeasonsState>(
+  // Widget _buildStandings(StandingsProvider standingsProvider) {
+  //   if (standingsProvider.state == ResultState.loading) {
+  //     return const Center(
+  //       child: CircularProgressIndicator(),
+  //     );
+  //   } else if (standingsProvider.state == ResultState.error) {
+  //     return const Center(
+  //       child: CustomInformation(
+  //           assets: 'assets/search.svg',
+  //           title: 'Data tidak ditemukan',
+  //           subtitle: 'Tunggu sebentar ya'),
+  //     );
+  //   }
+  //   var standing = standingsProvider.standings;
+  //   return _buildStandingList(standing);
+  // }
+
+  Builder _buildStandingList() {
+    return Builder(
+      builder: (context) {
+        return BlocBuilder<StandingsBloc, StandingsState>(
           builder: (context, state) {
-            if (state is SeasonsLoading) {
-              return Container();
-            } else if (state is SeasonsHasData) {
-              return SeasonList(state.seasons);
-            } else if (state is SeasonsError) {
-              return Expanded(
-                child: Center(
-                  child: Text(state.message),
+            if (state is StandingsLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is StandingsHasData) {
+              return StandingList(state.standings);
+            } else if (state is StandingsError) {
+              return Center(
+                child: Text(
+                  state.message,
                 ),
               );
             } else {
-              return Center(
-                child: Container(),
+              return const Center(
+                child: CustomInformation(
+                  assets: 'assets/search.svg',
+                  title: 'Data tidak ditemukan',
+                  subtitle: 'Silahkan coba lagi ya',
+                ),
               );
             }
           },
-        )
-      ],
+        );
+      },
     );
   }
 

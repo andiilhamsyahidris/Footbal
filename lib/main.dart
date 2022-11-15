@@ -4,10 +4,13 @@ import 'package:footbal/common/constant.dart';
 import 'package:footbal/common/custom_information.dart';
 import 'package:footbal/common/utils.dart';
 import 'package:footbal/presentation/bloc/season_bloc/seasons_bloc.dart';
+import 'package:footbal/presentation/bloc/standings_bloc/standings_bloc.dart';
 import 'package:footbal/presentation/bloc/team_list_bloc/team_list_bloc.dart';
 import 'package:footbal/presentation/pages/homepage.dart';
 import 'package:footbal/presentation/pages/splash_screen.dart';
 import 'package:footbal/injection.dart' as di;
+import 'package:footbal/presentation/provider/season_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   di.init();
@@ -19,7 +22,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiProvider(
       providers: [
         BlocProvider(
           create: (_) => di.locator<TeamListBloc>(),
@@ -27,6 +30,18 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => di.locator<SeasonsBloc>(),
         ),
+        BlocProvider(
+          create: (_) => di.locator<StandingsBloc>(),
+        ),
+        ChangeNotifierProvider<SeasonProvider>(
+          create: (_) => SeasonProvider(),
+        ),
+        // ChangeNotifierProvider<StandingsProvider>(
+        //   create: (_) => StandingsProvider(
+        //     foo=:
+        //         FootballRemoteDatasourcesImpl(client: http.Client()),
+        //   ),
+        // ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

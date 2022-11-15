@@ -8,7 +8,7 @@ class GetStandings {
 
   const GetStandings(this.repository);
 
-  Future<Either<Failure, List<Standings>>> execute(int seasonId) {
+  Future<Either<Failure, List<Standings>>> execute(int? seasonId) {
     return repository.getStandings(seasonId);
   }
 }

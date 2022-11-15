@@ -33,7 +33,7 @@ class TeamsRepositoryImpl implements TeamsRepository {
   }
 
   @override
-  Future<Either<Failure, List<Standings>>> getStandings(int seasonId) async {
+  Future<Either<Failure, List<Standings>>> getStandings(int? seasonId) async {
     try {
       final result = await footballRemoteDatasources.getStandings(seasonId);
       return Right(result.map((e) => e.toEntity()).toList());
