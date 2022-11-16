@@ -23,6 +23,16 @@ class TeamsRepositoryImpl implements TeamsRepository {
   }
 
   @override
+  Future<Either<Failure, Teams>> getTeamsById(int? teamId) async {
+    try {
+      final result = await footballRemoteDatasources.getTeamsById(teamId);
+      return Right(result.toEntity());
+    } on ServerException {
+      return const Left(ServerFailure(''));
+    }
+  }
+
+  @override
   Future<Either<Failure, List<Seasons>>> getSeasons() async {
     try {
       final result = await footballRemoteDatasources.getSeasons();

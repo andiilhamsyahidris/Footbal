@@ -9,7 +9,7 @@ class Seasons extends Equatable {
     required this.startDate,
     required this.endDate,
   });
-  int? seasonId;
+  int seasonId;
   String? name;
   int? countryId;
   int? leagueId;

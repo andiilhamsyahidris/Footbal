@@ -4,8 +4,10 @@ import 'package:footbal/domain/repositories/teams_repository.dart';
 import 'package:footbal/domain/usecases/get_seasons.dart';
 import 'package:footbal/domain/usecases/get_standings.dart';
 import 'package:footbal/domain/usecases/get_teams.dart';
+import 'package:footbal/domain/usecases/get_teams_by_id.dart';
 import 'package:footbal/presentation/bloc/season_bloc/seasons_bloc.dart';
 import 'package:footbal/presentation/bloc/standings_bloc/standings_bloc.dart';
+import 'package:footbal/presentation/bloc/team_by_id_bloc/team_by_id_bloc.dart';
 import 'package:footbal/presentation/bloc/team_list_bloc/team_list_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -29,11 +31,17 @@ void init() {
       getStandings: locator(),
     ),
   );
+  locator.registerFactory(
+    () => TeamByIdBloc(
+      getTeamsById: locator(),
+    ),
+  );
 
   // usecase
   locator.registerLazySingleton(() => GetTeams(locator()));
   locator.registerLazySingleton(() => GetSeasons(locator()));
   locator.registerLazySingleton(() => GetStandings(locator()));
+  locator.registerLazySingleton(() => GetTeamsById(locator()));
 
   // repository
   locator.registerLazySingleton<TeamsRepository>(

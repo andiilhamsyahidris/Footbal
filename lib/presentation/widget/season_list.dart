@@ -36,7 +36,7 @@ class _SeasonListState extends State<SeasonList> {
   SizedBox _buildCardSeason() {
     return SizedBox(
       height: 50,
-      width: MediaQuery.of(context).size.width - 120,
+      width: MediaQuery.of(context).size.width - 110,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
@@ -54,6 +54,7 @@ class _SeasonListState extends State<SeasonList> {
                 onSelected: (value) {
                   if (seasonProvider.index != index) {
                     seasonProvider.index = index;
+                    seasonProvider.seasonId = season.seasonId;
                   }
                 },
               );

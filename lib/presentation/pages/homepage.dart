@@ -5,9 +5,11 @@ import 'package:footbal/common/custom_information.dart';
 import 'package:footbal/presentation/bloc/season_bloc/seasons_bloc.dart';
 import 'package:footbal/presentation/bloc/standings_bloc/standings_bloc.dart';
 import 'package:footbal/presentation/bloc/team_list_bloc/team_list_bloc.dart';
+import 'package:footbal/presentation/provider/season_provider.dart';
 import 'package:footbal/presentation/widget/season_list.dart';
 import 'package:footbal/presentation/widget/standing_list.dart';
 import 'package:footbal/presentation/widget/team_list.dart';
+import 'package:provider/provider.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -141,80 +143,78 @@ class HomepageState extends State<Homepage> {
       },
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSubHeading(title: 'Teams', onTap: () {}),
-            BlocBuilder<TeamListBloc, TeamListState>(
-              builder: (context, state) {
-                if (state is TeamListLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state is TeamListHasData) {
-                  return TeamList(state.teams);
-                } else if (state is TeamListError) {
-                  return Expanded(
-                    child: Center(
-                      child: Text(state.message),
-                    ),
-                  );
-                } else {
-                  return const Center(
-                    child: CustomInformation(
-                        assets: 'assets/search.svg',
-                        title: 'Data tidak ditemukan',
-                        subtitle: 'Silahkan tunggu sebentar ya!'),
-                  );
-                }
-              },
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            BlocBuilder<SeasonsBloc, SeasonsState>(
-              builder: (context, state) {
-                if (state is SeasonsLoading) {
-                  return Container();
-                } else if (state is SeasonsHasData) {
-                  return SeasonList(state.seasons);
-                } else if (state is SeasonsError) {
-                  return Expanded(
-                    child: Center(
-                      child: Text(state.message),
-                    ),
-                  );
-                } else {
-                  return Center(
-                    child: Container(),
-                  );
-                }
-              },
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSubHeading(title: 'Teams', onTap: () {}),
+              BlocBuilder<TeamListBloc, TeamListState>(
+                builder: (context, state) {
+                  if (state is TeamListLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is TeamListHasData) {
+                    return TeamList(state.teams);
+                  } else if (state is TeamListError) {
+                    return Expanded(
+                      child: Center(
+                        child: Text(state.message),
+                      ),
+                    );
+                  } else {
+                    return const Center(
+                      child: CustomInformation(
+                          assets: 'assets/search.svg',
+                          title: 'Data tidak ditemukan',
+                          subtitle: 'Silahkan tunggu sebentar ya!'),
+                    );
+                  }
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              BlocBuilder<SeasonsBloc, SeasonsState>(
+                builder: (context, state) {
+                  if (state is SeasonsLoading) {
+                    return Container();
+                  } else if (state is SeasonsHasData) {
+                    return SeasonList(state.seasons);
+                  } else if (state is SeasonsError) {
+                    return Expanded(
+                      child: Center(
+                        child: Text(state.message),
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: Container(),
+                    );
+                  }
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              _buildSubHeading(title: 'Season', onTap: () {}),
+              const SizedBox(
+                height: 15,
+              ),
+              Consumer<SeasonProvider>(
+                builder: (context, seasonProvider, child) {
+                  return _buildStandingList(seasonProvider.seasonId);
+                },
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // Widget _buildStandings(StandingsProvider standingsProvider) {
-  //   if (standingsProvider.state == ResultState.loading) {
-  //     return const Center(
-  //       child: CircularProgressIndicator(),
-  //     );
-  //   } else if (standingsProvider.state == ResultState.error) {
-  //     return const Center(
-  //       child: CustomInformation(
-  //           assets: 'assets/search.svg',
-  //           title: 'Data tidak ditemukan',
-  //           subtitle: 'Tunggu sebentar ya'),
-  //     );
-  //   }
-  //   var standing = standingsProvider.standings;
-  //   return _buildStandingList(standing);
-  // }
-
-  Builder _buildStandingList() {
+  Builder _buildStandingList(int seasonId) {
+    context.read<StandingsBloc>().add(FetchStandings(seasonId));
     return Builder(
       builder: (context) {
         return BlocBuilder<StandingsBloc, StandingsState>(

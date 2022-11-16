@@ -5,6 +5,7 @@ import 'package:footbal/common/custom_information.dart';
 import 'package:footbal/common/utils.dart';
 import 'package:footbal/presentation/bloc/season_bloc/seasons_bloc.dart';
 import 'package:footbal/presentation/bloc/standings_bloc/standings_bloc.dart';
+import 'package:footbal/presentation/bloc/team_by_id_bloc/team_by_id_bloc.dart';
 import 'package:footbal/presentation/bloc/team_list_bloc/team_list_bloc.dart';
 import 'package:footbal/presentation/pages/homepage.dart';
 import 'package:footbal/presentation/pages/splash_screen.dart';
@@ -32,6 +33,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => di.locator<StandingsBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<TeamByIdBloc>(),
         ),
         ChangeNotifierProvider<SeasonProvider>(
           create: (_) => SeasonProvider(),
